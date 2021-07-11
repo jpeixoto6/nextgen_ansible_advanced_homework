@@ -3,22 +3,19 @@
   - name: Fetch Instance Info
     os_server_info:
       cloud: openstack
-      server: app*
       filters:
         vm_state: active
     register: result
 
-  - debug:
-      msg: "{{ result.openstack_servers }}"
     
   - name: Delete instances
     os_server:
       cloud: openstack
-      name: "{{ __openstack_server.instance_name }}" 
+      name: "{{ __openstack_server.name }}" 
       state: absent
     loop: "{{ result.openstack_servers }}"
     loop_control:
- 	loop_var: __openstack_server
+      loop_var: __openstack_server
     
 
    
