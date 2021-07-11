@@ -32,3 +32,25 @@
           use_hostnames: True
           expand_hostvars: False
           fail_on_errors: True
+- name: Set openstack.pub authorized key from file
+  authorized_key:
+    user: cloud-user
+    state: present
+    key: "{{ lookup('file', '/root/.ssh/openstack.pub') }}"
+- name: Copy private key file 
+  get_url:
+    url: http://www.opentlc.com/download/ansible_bootcamp/openstack_keys/{{ item }}
+    dest:   /root/.ssh/{{ item }} 
+  with_items:
+     - openstack.pub
+     - openstack.pem
+- name: Change permissions
+  file:
+    path: /root/.ssh/{{ item }}
+    owner: root
+    group: root
+    mode: 0400
+  with_items:
+     - openstack.pub
+     - openstack.pem
+
